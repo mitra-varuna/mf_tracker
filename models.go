@@ -1,22 +1,21 @@
 package mf_tracker
 
 import (
-	"math/big"
 	"time"
 )
 
 //A Mutual fund model
 type MutualFund struct {
 	ISIN string
-	CurrentNAV big.Float
-	RePurchasePrice big.Float
-	SalePrice big.Float
+	CurrentNAV float64
+	RePurchasePrice float64
+	SalePrice float64
 }
 
 //A mutual fund investment model
 type MutualFundInvestment struct {
 	Fund MutualFund
-	Units float32
+	Units float64
 	InvestmentDate time.Time
 }
 
@@ -26,13 +25,13 @@ type PortFolio struct {
 }
 
 //Get Current value of the mutual fund investment
-func (m MutualFundInvestment) CurrentValue() big.Float{
+func (m MutualFundInvestment) CurrentValue() float64{
 	return m.Fund.CurrentNAV * m.Units
 }
 
 //Get Total Value of the Investments
-func (p PortFolio) TotalValue() big.Float{
-	sum := 0
+func (p PortFolio) TotalValue() float64{
+	sum := 0.0
 	for _, investment := range p.Investments {
 		sum += investment.CurrentValue()
 	}
@@ -40,8 +39,8 @@ func (p PortFolio) TotalValue() big.Float{
 }
 
 //Add a new mutual fund investment to the portfolio
-func (p PortFolio) NewInvestment(m MutualFund, amount big.Float) {
+func (p *PortFolio) NewInvestment(m MutualFund, amount float64) {
 	var units = amount/m.CurrentNAV
 	investment := MutualFundInvestment{Fund:m, Units:units, InvestmentDate:time.Now()}
-	append(investment, p.Investments)
+	p.Investments = append(p.Investments, investment)
 }
