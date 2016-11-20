@@ -1,0 +1,1 @@
+A toy application for understanding Golang.
