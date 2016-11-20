@@ -15,10 +15,28 @@ type MutualFund struct {
 
 type MutualFundInvestment struct {
 	Fund MutualFund
-	Units int
+	Units float32
 	InvestmentDate time.Time
+}
+
+type PortFolio struct {
+	Investments []MutualFundInvestment
 }
 
 func (m MutualFundInvestment) CurrentValue() big.Float{
 	return m.Fund.CurrentNAV * m.Units
+}
+
+func (p PortFolio) TotalValue() big.Float{
+	sum := 0
+	for _, investment := range p.Investments {
+		sum += investment.CurrentValue()
+	}
+	return sum
+}
+
+func (p PortFolio) NewInvestment(m MutualFund, amount big.Float) {
+	var units = amount/m.CurrentNAV
+	investment := MutualFundInvestment{Fund:m, Units:units, InvestmentDate:time.Now()}
+	append(investment, p.Investments)
 }
